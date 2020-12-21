@@ -30,8 +30,16 @@ repositories {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "io.ktor:ktor-server-netty:$ktor_version"
+
+    // successor to log4j used as SLF4J provider
+    // will use resources/logback.xml to configure log output
     implementation "ch.qos.logback:logback-classic:$logback_version"
+
+    // is a core package where most of the application API and implementation is located
     implementation "io.ktor:ktor-server-core:$ktor_version"
+    // required for basic usage with Netty
+    // supports Netty in embedded mode
+    implementation "io.ktor:ktor-server-netty:$ktor_version"
+
     testImplementation "io.ktor:ktor-server-tests:$ktor_version"
 }
