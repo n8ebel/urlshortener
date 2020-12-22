@@ -21,7 +21,7 @@ fun Application.module(testing: Boolean = false) {
     install(StatusPages) {
         exception<Throwable> { cause ->
             // Display generic error response to user
-            call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+            call.respond(HttpStatusCode.InternalServerError, "Server Error")
             // re-throw to ensure it is not swallowed by status page
             throw cause
         }
@@ -33,12 +33,18 @@ fun Application.module(testing: Boolean = false) {
             throw cause
         }
 
-        status(HttpStatusCode.NotFound) {
+        // serve custom .html pages for specific status responses
+        statusFile(HttpStatusCode.NotFound, HttpStatusCode.Unauthorized, filePattern = "statuspages/error#.html")
+
+        //
+        status(HttpStatusCode.InternalServerError) {
             call.respond(TextContent("Error: ${it.value} ${it.description}", ContentType.Text.Plain.withCharset(Charsets.UTF_8), it))
         }
     }
 
     routing {
+        // exercising handling of an unexpected runtime exception
+        // results in a generic status page being shown
         get("/") {
             throw RuntimeException("oops")
             call.respondText("We're going to shorten some URLs!!", contentType = ContentType.Text.Plain)
@@ -47,8 +53,10 @@ fun Application.module(testing: Boolean = false) {
             throw CustomException()
             call.respondText("Testing StatusPages feature", contentType = ContentType.Text.Plain)
         }
-        get("/missing") {
-            call.respond(HttpStatusCode.NotFound)
+        // exercise display of expected 500 error
+        // when 500 is returned directly, we can show a more informative status page
+        get("/error"){
+            call.respond(HttpStatusCode.InternalServerError)
         }
     }
 }
