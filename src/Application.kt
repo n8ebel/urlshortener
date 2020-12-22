@@ -1,6 +1,7 @@
 package com.goobar
 
 import io.ktor.application.*
+import io.ktor.content.*
 import io.ktor.features.*
 import io.ktor.response.*
 import io.ktor.request.*
@@ -31,6 +32,10 @@ fun Application.module(testing: Boolean = false) {
             // re-throw to ensure it is not swallowed by status page
             throw cause
         }
+
+        status(HttpStatusCode.NotFound) {
+            call.respond(TextContent("Error: ${it.value} ${it.description}", ContentType.Text.Plain.withCharset(Charsets.UTF_8), it))
+        }
     }
 
     routing {
@@ -42,6 +47,8 @@ fun Application.module(testing: Boolean = false) {
             throw CustomException()
             call.respondText("Testing StatusPages feature", contentType = ContentType.Text.Plain)
         }
-
+        get("/missing") {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 }
