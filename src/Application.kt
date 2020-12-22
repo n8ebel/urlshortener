@@ -11,6 +11,9 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 class CustomException : RuntimeException()
 
+private val HttpStatusCode.Companion.CustomError: HttpStatusCode
+    get() = HttpStatusCode(900, "Some Custom Error Occurred")
+
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
@@ -24,7 +27,7 @@ fun Application.module(testing: Boolean = false) {
 
         exception<CustomException> { cause ->
             // Display specific error response to user
-            call.respond(HttpStatusCode.InternalServerError, "Custom Server Error")
+            call.respond(HttpStatusCode.CustomError, "Custom Server Error")
             // re-throw to ensure it is not swallowed by status page
             throw cause
         }
