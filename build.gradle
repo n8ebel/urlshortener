@@ -19,11 +19,14 @@ application {
     applicationDefaultJvmArgs = [
             '-server',
             '-Djava.awt.headless=true',
-            '-Dio.ktor.development=true',
             '-Xms128m',
             '-Xmx256m',
             '-XX:+UseG1GC',
-            '-XX:MaxGCPauseMillis=100'
+            '-XX:MaxGCPauseMillis=100',
+            // configure development mode from Gradle System Property
+            // will not control development mode if application launched using
+            // Kotlin Application build config rather than Gradle build config
+            "-Dio.ktor.development=${System.getProperty("io.ktor.development") ?: "false"}"
     ]
 }
 
