@@ -13,7 +13,19 @@ apply plugin: 'application'
 
 group 'com.goobar'
 version '0.0.1'
-mainClassName = "io.ktor.server.netty.EngineMain"
+
+application {
+    mainClassName = "io.ktor.server.netty.EngineMain"
+    applicationDefaultJvmArgs = [
+            '-server',
+            '-Djava.awt.headless=true',
+            '-Dio.ktor.development=true',
+            '-Xms128m',
+            '-Xmx256m',
+            '-XX:+UseG1GC',
+            '-XX:MaxGCPauseMillis=100'
+    ]
+}
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
