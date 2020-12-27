@@ -34,7 +34,7 @@ To enable `development` mode for this build configuration:
 -  add `-Dio.ktor.development=true` to the `VM` options of the IntelliJ run configuration.
 
 
-#### Executing the Gradle `run` task
+### Executing the Gradle `run` task
 This works whether executing the `run` task from the command line using the Gradle Wrapper or when executing Gradle tasks from IntelliJ
 
 - add `-Dio.ktor.development=true` to the `applicationDefaultJvmArgs` property of the `application {}` block in the project's `build.gradle` file
@@ -77,13 +77,33 @@ With this in place, we can do the following:
 
 Thanks to [Ryan Harter](@rharter) for pointing me to this approach.
 
-### Using Development Mode
+## Using Development Mode
 When the application has been run with `development` mode turned on, code changes can then be deployed without a full recompile of the application.
 
-#### From IntelliJ
+### From IntelliJ
 - Run the application with `development` mode enabled
 - Make a change to your code
 - Click the `rebuild` option
 - Reload your webpage
 
 After this, your new changes should take effect
+
+### From Command Line via Gradle
+- Run the `-t installDist` command using the Gradle wrapper
+
+`./gradlew -t installDist`
+  
+- From another terminal tab, run the application with `development` mode enabled
+  
+`./gradlew run -Dio.ktor.development=true`
+
+- Make a change to your code
+- The code should take a few seconds to recompile
+- Reload your webpage
+
+#### Continuous Gradle Builds
+The `-t` flag in the previous example is synonymous with `--continuous`
+
+This means that Gradle will not exit after a command is executed, and Gradle will re-execute a task when file inputs change.
+
+By running this first, Gradle will automatically rebuild and distribute the application on code changes.  And by running the application with `development` mode enabled, it will automatically reload those changes when they are received.
