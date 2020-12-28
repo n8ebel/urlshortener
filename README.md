@@ -21,25 +21,31 @@ ktor {
 }
 ```
 
+This will ensure that `development` mode is enabled regardless of how the application is deployed.
+
 ## Optionally Enabling Development Mode
-You may not want `development` mode to always be enabled, and therefore, may want to avoid hardcoding `development=true` 
+You may not want `development` mode to always be enabled, and therefore, may want to avoid hardcoding `ktor.development=true` 
 
 To enable/disable `development` mode on a case-by-case basis, there are several options; depending on how you plan to deploy the application.
 
 ### Running The Kotlin Application Build Configuration
 When you start your Ktor application by clicking the green "play" button next to the `main()` function, this creates and launches a Kotlin Application Build Configuration.
 
-To enable `development` mode for this build configuration:
+This configuration will run the `:classes` Gradle task, but does not rely on the `application` plugin or the associated `:run` task.
+
+This means that any `applicationDefaultJvmArgs` configured within the `application {}` of the `build.gradle` file will not be present when the application launches.
+
+Instead, to enable `development` mode for this build configuration:
 
 -  add `-Dio.ktor.development=true` to the `VM` options of the IntelliJ run configuration.
 
 
 ### Executing the Gradle `run` task
-This works whether executing the `run` task from the command line using the Gradle Wrapper or when executing Gradle tasks from IntelliJ
+The Gradle `application` plugin assists in creating an executable JVM application and provides a `:run` task to start our application.
 
+To enable `development` mode when deploying via the `:run` task
 - add `-Dio.ktor.development=true` to the `applicationDefaultJvmArgs` property of the `application {}` block in the project's `build.gradle` file
 
-The following snippet demonstrates this final example
 ```groovy
 // build.gradle
 application {
@@ -52,11 +58,11 @@ application {
     ]
 }
 ```
+This works whether executing the `run` task from the command line using the Gradle Wrapper or when executing Gradle tasks from IntelliJ
+
 In practice, this approach doesn't bring much flexibility to our deployment workflows.
 
-If we run from Gradle, `development` mode is on, if we run via the Kotlin Application build configuration, `development` mode would be turned off.
-
-What if we wanted to build from Gradle, but be able to turn on/off `development` mode?
+What if we wanted to start the app using the `:run` task, but be able to turn on/off `development` mode?
 
 We can extend the `applicationDefaultJvmArgs` approach to pull from our Gradle System Properties.
 

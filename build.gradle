@@ -9,6 +9,13 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
+
+// implicitly applies Java plugin
+// implicitly applies Distribution plugin
+//
+// The Application plugin facilitates creating an executable JVM application. It makes it easy to start the application
+// locally during development, and to package the application as a TAR and/or ZIP including operating system specific
+// start scripts.
 apply plugin: 'application'
 
 group 'com.goobar'
