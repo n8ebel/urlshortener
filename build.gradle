@@ -9,11 +9,35 @@ buildscript {
 }
 
 apply plugin: 'kotlin'
+
+// implicitly applies Java plugin
+// implicitly applies Distribution plugin
+//
+// The Application plugin facilitates creating an executable JVM application. It makes it easy to start the application
+// locally during development, and to package the application as a TAR and/or ZIP including operating system specific
+// start scripts.
 apply plugin: 'application'
 
 group 'com.goobar'
 version '0.0.1'
-mainClassName = "io.ktor.server.netty.EngineMain"
+
+// application plugin provides the :run task
+// :run will start another JVM and pull in the applicationDefaultJvmArgs
+application {
+    mainClassName = "io.ktor.server.netty.EngineMain"
+    applicationDefaultJvmArgs = [
+            '-server',
+            '-Djava.awt.headless=true',
+            '-Xms128m',
+            '-Xmx256m',
+            '-XX:+UseG1GC',
+            '-XX:MaxGCPauseMillis=100',
+            // configure development mode from Gradle System Property
+            // will not control development mode if application launched using
+            // Kotlin Application build config rather than Gradle build config
+            "-Dio.ktor.development=${System.getProperty("io.ktor.development") ?: "false"}"
+    ]
+}
 
 sourceSets {
     main.kotlin.srcDirs = main.java.srcDirs = ['src']
