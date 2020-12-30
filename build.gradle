@@ -21,6 +21,8 @@ apply plugin: 'application'
 group 'com.goobar'
 version '0.0.1'
 
+// application plugin provides the :run task
+// :run will start another JVM and pull in the applicationDefaultJvmArgs
 application {
     mainClassName = "io.ktor.server.netty.EngineMain"
     applicationDefaultJvmArgs = [
