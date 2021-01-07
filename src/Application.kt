@@ -62,5 +62,9 @@ fun Application.module(testing: Boolean = false) {
                 }
             }
         }
+
+        put("/shorten") {
+            call.respondText("This route will return a shortened url", ContentType.Text.Plain)
+        }
     }
 }

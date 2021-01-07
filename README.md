@@ -1,6 +1,16 @@
 # Url Shortener
 A Kotlin-based url shortener built with Ktor
 
+## Testing With Curl
+Start the application, and then use CURL to verify that each route is working properly
+
+### Testing the `/` route
+`curl  0.0.0.0:8080`
+
+### Testing the `/shorten` route
+`curl -X PUT 0.0.0.0:8080/shorten`
+
+
 ## Enabling Development Mode
 Enabling `development` mode will turn on auto-reload so that you may quickly deploy code changes to a running service.
 
