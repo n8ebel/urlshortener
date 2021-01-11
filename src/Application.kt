@@ -66,5 +66,21 @@ fun Application.module(testing: Boolean = false) {
         put("/shorten") {
             call.respondText("This route will return a shortened url", ContentType.Text.Plain)
         }
+
+        get("/saved") {
+            call.respondText("This route will return all saved urls", ContentType.Text.Plain)
+        }
+
+        get("/manage") {
+            call.respondText("This route will display all saved urls", ContentType.Text.Plain)
+        }
+
+        post("/delete/{id}") {
+            call.respondText("This route will enable deletion of url with id ${call.parameters["id"]}", ContentType.Text.Plain)
+        }
+
+        get("/{id}") {
+            call.respondText("Will lookup the url for ${call.parameters["id"]}", ContentType.Text.Plain)
+        }
     }
 }
