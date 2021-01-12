@@ -45,8 +45,9 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
-        // exercising handling of an unexpected runtime exception
-        // results in a generic status page being shown
+
+        // our home route
+        // will eventually provide the UI to shorten a URL
         get("/") {
             call.respondHtml {
                 head {
@@ -63,22 +64,27 @@ fun Application.module(testing: Boolean = false) {
             }
         }
 
+        // the endpoint that will actually shorten and return a URL
         put("/shorten") {
             call.respondText("This route will return a shortened url", ContentType.Text.Plain)
         }
 
+        // will provide a list of all saved URLs
         get("/saved") {
             call.respondText("This route will return all saved urls", ContentType.Text.Plain)
         }
 
+        // will provide UI for viewing/deleting URLs
         get("/manage") {
             call.respondText("This route will display all saved urls", ContentType.Text.Plain)
         }
 
+        // the endpoint to delete a specific URL
         post("/delete/{id}") {
             call.respondText("This route will enable deletion of url with id ${call.parameters["id"]}", ContentType.Text.Plain)
         }
 
+        // the endpoint to actually process a shortened URL and redirect to real URL
         get("/{id}") {
             call.respondText("Will lookup the url for ${call.parameters["id"]}", ContentType.Text.Plain)
         }
