@@ -3,10 +3,12 @@ package com.goobar
 import io.ktor.application.*
 import io.ktor.content.*
 import io.ktor.features.*
+import io.ktor.html.*
 import io.ktor.response.*
 import io.ktor.request.*
 import io.ktor.routing.*
 import io.ktor.http.*
+import kotlinx.html.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -43,20 +45,48 @@ fun Application.module(testing: Boolean = false) {
     }
 
     routing {
-        // exercising handling of an unexpected runtime exception
-        // results in a generic status page being shown
+
+        // our home route
+        // will eventually provide the UI to shorten a URL
         get("/") {
-            throw RuntimeException("oops")
-            call.respondText("We're going to shorten some URLs!!", contentType = ContentType.Text.Plain)
+            call.respondHtml {
+                head {
+                    title("Url Shortener")
+                }
+                body {
+                    h1 {
+                        +"Ktor Url Shortener"
+                    }
+                    p {
+                        +"This is where we will eventually enter urls to be shortened"
+                    }
+                }
+            }
         }
-        get("/custom") {
-            throw CustomException()
-            call.respondText("Testing StatusPages feature", contentType = ContentType.Text.Plain)
+
+        // the endpoint that will actually shorten and return a URL
+        put("/shorten") {
+            call.respondText("This route will return a shortened url", ContentType.Text.Plain)
         }
-        // exercise display of expected 500 error
-        // when 500 is returned directly, we can show a more informative status page
-        get("/error"){
-            call.respond(HttpStatusCode.InternalServerError)
+
+        // will provide a list of all saved URLs
+        get("/saved") {
+            call.respondText("This route will return all saved urls", ContentType.Text.Plain)
+        }
+
+        // will provide UI for viewing/deleting URLs
+        get("/manage") {
+            call.respondText("This route will display all saved urls", ContentType.Text.Plain)
+        }
+
+        // the endpoint to delete a specific URL
+        post("/delete/{id}") {
+            call.respondText("This route will enable deletion of url with id ${call.parameters["id"]}", ContentType.Text.Plain)
+        }
+
+        // the endpoint to actually process a shortened URL and redirect to real URL
+        get("/{id}") {
+            call.respondText("Will lookup the url for ${call.parameters["id"]}", ContentType.Text.Plain)
         }
     }
 }
