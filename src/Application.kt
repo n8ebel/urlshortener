@@ -46,23 +46,7 @@ fun Application.module(testing: Boolean = false) {
 
     routing {
 
-        // our home route
-        // will eventually provide the UI to shorten a URL
-        get("/") {
-            call.respondHtml {
-                head {
-                    title("Url Shortener")
-                }
-                body {
-                    h1 {
-                        +"Ktor Url Shortener"
-                    }
-                    p {
-                        +"This is where we will eventually enter urls to be shortened"
-                    }
-                }
-            }
-        }
+        home()
 
         // the endpoint that will actually shorten and return a URL
         put("/shorten") {
@@ -81,6 +65,7 @@ fun Application.module(testing: Boolean = false) {
 
         // the endpoint to delete a specific URL
         post("/delete/{id}") {
+            // maybe passing the id in the body woudl be better here?
             call.respondText("This route will enable deletion of url with id ${call.parameters["id"]}", ContentType.Text.Plain)
         }
 
