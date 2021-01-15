@@ -11,7 +11,9 @@ Start the application, and then use CURL to verify that each route is working pr
 `curl 0.0.0.0:8080/12345`
 
 ### Testing the `/shorten` route
-`curl -X PUT 0.0.0.0:8080/shorten`
+```
+curl -X PUT 0.0.0.0:8080/shorten -d url=https://goobar.io/some-longer-url
+```
 
 ### Testing the `/manage` route
 `curl 0.0.0.0:8080/manage`

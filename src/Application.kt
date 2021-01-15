@@ -8,6 +8,7 @@ import io.ktor.response.*
 import io.ktor.request.*
 import io.ktor.routing.*
 import io.ktor.http.*
+import io.ktor.locations.*
 import kotlinx.html.*
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
@@ -20,10 +21,12 @@ private val HttpStatusCode.Companion.CustomError: HttpStatusCode
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+
+    install(Locations)
     install(StatusPages) {
         exception<Throwable> { cause ->
             // Display generic error response to user
-            call.respond(HttpStatusCode.InternalServerError, "Server Error")
+            call.respond(HttpStatusCode.InternalServerError, "Server Error - ${cause.message}")
             // re-throw to ensure it is not swallowed by status page
             throw cause
         }
@@ -47,11 +50,7 @@ fun Application.module(testing: Boolean = false) {
     routing {
 
         home()
-
-        // the endpoint that will actually shorten and return a URL
-        put("/shorten") {
-            call.respondText("This route will return a shortened url", ContentType.Text.Plain)
-        }
+        shorten()
 
         // will provide a list of all saved URLs
         get("/saved") {
