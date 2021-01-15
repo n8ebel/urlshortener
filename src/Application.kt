@@ -11,6 +11,12 @@ import io.ktor.http.*
 import io.ktor.locations.*
 import kotlinx.html.*
 
+@Location("/shorten")
+data class Shorten(val url: String)
+
+@Location("/")
+object Home
+
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 class CustomException : RuntimeException()

@@ -2,13 +2,14 @@ package com.goobar
 
 import io.ktor.application.*
 import io.ktor.html.*
+import io.ktor.locations.*
 import io.ktor.routing.*
 import kotlinx.html.*
 
 fun Routing.home() {
     // our home route
     // will eventually provide the UI to shorten a URL
-    get("/") {
+    get<Home> {
         call.respondHtml {
             head {
                 title("Url Shortener")
