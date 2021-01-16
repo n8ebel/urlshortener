@@ -8,19 +8,19 @@ import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.util.pipeline.*
 
-// the endpoint that will actually shorten and return a URL
-fun Routing.shorten() {
+fun Routing.delete() {
 
     suspend fun PipelineContext<Unit, ApplicationCall>.onError() {
-        call.respond(HttpStatusCode.BadRequest, "${HttpStatusCode.BadRequest.description} - missing target url")
+        call.respond(HttpStatusCode.BadRequest, "${HttpStatusCode.BadRequest.description} - missing id")
     }
 
-    put<Shorten> { shorten ->
+    // the endpoint to delete a specific URL
+    post<Delete> { delete ->
         try {
             val parameters = call.receiveParameters()
-            if(parameters.contains("url")) {
-                val url = parameters["url"]
-                call.respondText("This route will return a shortened version of $url", ContentType.Text.Plain)
+            if(parameters.contains("id")) {
+                val id = parameters["id"]
+                call.respondText("This route will enable deletion of url with id: $id", ContentType.Text.Plain)
             } else {
                 onError()
             }
