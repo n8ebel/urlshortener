@@ -11,11 +11,23 @@ import io.ktor.http.*
 import io.ktor.locations.*
 import kotlinx.html.*
 
+@Location("/")
+object Home
+
 @Location("/shorten")
 data class Shorten(val url: String)
 
-@Location("/")
-object Home
+@Location("/saved")
+object Saved
+
+@Location("/manage")
+object Manage
+
+@Location("/delete")
+object Delete
+
+@Location("/{id}")
+data class RedirectUrl(val id: String)
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -59,23 +71,24 @@ fun Application.module(testing: Boolean = false) {
         shorten()
 
         // will provide a list of all saved URLs
-        get("/saved") {
+        get<Saved> {
             call.respondText("This route will return all saved urls", ContentType.Text.Plain)
         }
 
         // will provide UI for viewing/deleting URLs
-        get("/manage") {
+        get<Manage> {
             call.respondText("This route will display all saved urls", ContentType.Text.Plain)
         }
 
         // the endpoint to delete a specific URL
-        post("/delete/{id}") {
+        post<Delete> {
+            // need to process id parameter
             // maybe passing the id in the body woudl be better here?
             call.respondText("This route will enable deletion of url with id ${call.parameters["id"]}", ContentType.Text.Plain)
         }
 
         // the endpoint to actually process a shortened URL and redirect to real URL
-        get("/{id}") {
+        get<RedirectUrl> {
             call.respondText("Will lookup the url for ${call.parameters["id"]}", ContentType.Text.Plain)
         }
     }
